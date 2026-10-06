@@ -77,3 +77,24 @@ distorted/NPT data, and extending `DenoiserMPNN`'s conditioning to take P
 as well as T (same pattern as the (P,T) version sketched earlier in
 test74's git history, before it was simplified to T-only), is the next
 piece of actual work, not yet done.
+
+## Result: bigger network + 18 datasets did NOT fix the melt-quench over-disordering
+
+Trained with HIDDEN_DIM=128, N_LAYERS=4 (4x test74's capacity) on all 18
+datasets (8 base + 4 distorted + 6 NPT). Final losses were lower than
+test74's across the board, but the melt->quench->glass-formation
+experiment (melt_quench_glass_formation.py, same protocol as test74)
+gave essentially IDENTICAL final-state disorder: nn_std ~0.29-0.33 A
+after quenching and holding at 300K, vs the real glass reference's
+~0.08 A -- no improvement over test74's ~0.28-0.43 A.
+
+Conclusion: neither "network too small" nor "T/structural coverage too
+narrow" was the dominant bottleneck. The denoising (fixed-sigma score
+matching) training objective itself likely has a structural accuracy
+ceiling here. The recommended next step is switching to DIRECT force
+supervision (regress against the real Vashishta forces, extractable from
+LAMMPS for every training frame -- see test70's compute_true_force.py for
+the extraction method already implemented) instead of denoising -- this
+is also how the cited Erhard et al. GAP potential and essentially all
+mainstream ML interatomic potentials are actually trained, rather than via
+score-matching.

@@ -1,0 +1,51 @@
+Start (crystal): nn_mean=2.9535 A  nn_min=2.8533 A  nn_std=0.0447 A
+
+=== Phase 1: MELT (T=3000K held, 1000 steps) ===
+  step   100  nn_mean=2.9119 A  nn_min=2.7292 A  nn_std=0.0708 A
+  step   200  nn_mean=2.8791 A  nn_min=2.6757 A  nn_std=0.0767 A
+  step   300  nn_mean=2.8652 A  nn_min=2.6506 A  nn_std=0.0861 A
+  step   400  nn_mean=2.8530 A  nn_min=2.6334 A  nn_std=0.1139 A
+  step   500  nn_mean=2.8417 A  nn_min=2.5815 A  nn_std=0.1169 A
+  step   600  nn_mean=2.8353 A  nn_min=2.5208 A  nn_std=0.1171 A
+  step   700  nn_mean=2.8047 A  nn_min=2.4837 A  nn_std=0.1206 A
+  step   800  nn_mean=2.8037 A  nn_min=2.5892 A  nn_std=0.1502 A
+  step   900  nn_mean=2.8186 A  nn_min=2.5319 A  nn_std=0.1300 A
+  step  1000  nn_mean=2.7972 A  nn_min=2.5530 A  nn_std=0.1413 A
+
+=== Phase 2: QUENCH (3000K -> 300K linear ramp, 2000 steps) ===
+  step   100  T=2866K  nn_mean=2.7852 A  nn_min=2.4468 A  nn_std=0.1390 A
+  step   200  T=2731K  nn_mean=2.7526 A  nn_min=2.3652 A  nn_std=0.1719 A
+  step   300  T=2596K  nn_mean=2.7704 A  nn_min=2.4301 A  nn_std=0.1455 A
+  step   400  T=2461K  nn_mean=2.7098 A  nn_min=2.3345 A  nn_std=0.1530 A
+  step   500  T=2326K  nn_mean=2.7030 A  nn_min=2.1873 A  nn_std=0.1935 A
+  step   600  T=2191K  nn_mean=2.7180 A  nn_min=2.4025 A  nn_std=0.1728 A
+  step   700  T=2056K  nn_mean=2.6867 A  nn_min=2.3229 A  nn_std=0.1704 A
+  step   800  T=1921K  nn_mean=2.7105 A  nn_min=2.1488 A  nn_std=0.1861 A
+  step   900  T=1786K  nn_mean=2.6541 A  nn_min=2.0553 A  nn_std=0.2114 A
+  step  1000  T=1651K  nn_mean=2.6762 A  nn_min=1.8740 A  nn_std=0.2344 A
+  step  1100  T=1516K  nn_mean=2.6609 A  nn_min=2.1456 A  nn_std=0.2203 A
+  step  1200  T=1381K  nn_mean=2.6584 A  nn_min=2.2077 A  nn_std=0.2006 A
+  step  1300  T=1245K  nn_mean=2.6638 A  nn_min=2.1444 A  nn_std=0.2334 A
+  step  1400  T=1110K  nn_mean=2.6206 A  nn_min=1.8823 A  nn_std=0.2678 A
+  step  1500  T=975K  nn_mean=2.6244 A  nn_min=2.1588 A  nn_std=0.2233 A
+  step  1600  T=840K  nn_mean=2.5587 A  nn_min=1.7506 A  nn_std=0.2856 A
+  step  1700  T=705K  nn_mean=2.4784 A  nn_min=1.8182 A  nn_std=0.2883 A
+  step  1800  T=570K  nn_mean=2.5197 A  nn_min=1.9535 A  nn_std=0.2903 A
+  step  1900  T=435K  nn_mean=2.5057 A  nn_min=1.7120 A  nn_std=0.2934 A
+  step  2000  T=300K  nn_mean=2.4795 A  nn_min=1.9686 A  nn_std=0.2954 A
+
+=== Phase 3: HOLD (T=300K held, 1000 steps) ===
+  step   100  nn_mean=2.4139 A  nn_min=1.7953 A  nn_std=0.3026 A
+  step   200  nn_mean=2.4049 A  nn_min=1.9026 A  nn_std=0.2928 A
+  step   300  nn_mean=2.4450 A  nn_min=1.7145 A  nn_std=0.3341 A
+  step   400  nn_mean=2.4556 A  nn_min=1.3453 A  nn_std=0.3261 A
+  step   500  nn_mean=2.4375 A  nn_min=1.5116 A  nn_std=0.3083 A
+  step   600  nn_mean=2.4906 A  nn_min=1.7836 A  nn_std=0.2867 A
+  step   700  nn_mean=2.4894 A  nn_min=1.6641 A  nn_std=0.3012 A
+  step   800  nn_mean=2.5358 A  nn_min=1.8463 A  nn_std=0.2870 A
+  step   900  nn_mean=2.5420 A  nn_min=1.7959 A  nn_std=0.2897 A
+  step  1000  nn_mean=2.4918 A  nn_min=1.8670 A  nn_std=0.2893 A
+
+=== Reference values (from real MD, for comparison) ===
+Real crystal (300K): nn_std ~ 0.014 A (sharp, ordered)
+Real glass (300K, melt-quenched): nn_std ~ 0.08 A (disordered)
