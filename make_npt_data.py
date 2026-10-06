@@ -70,8 +70,17 @@ run {PROD_STEPS}
     if result.returncode != 0:
         print(f"{name}: LAMMPS FAILED: {result.stderr[-1000:]}")
         return None
-    thermo_lines = [l for l in result.stdout.splitlines() if l.strip() and l.strip()[0].isdigit()]
-    mean_press_bar = np.mean([float(l.split()[2]) for l in thermo_lines[-20:]]) if thermo_lines else float("nan")
+    def parse_thermo_line(line):
+        parts = line.split()
+        if len(parts) != 5:
+            return None
+        try:
+            return [float(p) for p in parts]
+        except ValueError:
+            return None
+
+    thermo_lines = [v for line in result.stdout.splitlines() if (v := parse_thermo_line(line)) is not None]
+    mean_press_bar = np.mean([v[2] for v in thermo_lines[-20:]]) if thermo_lines else float("nan")
     print(f"{name}: done, mean press (prod) = {mean_press_bar / 10000.0:.2f} GPa")
 
     dump_path = work / f"{name}.lammpstrj"
