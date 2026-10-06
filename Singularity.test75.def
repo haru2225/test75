@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: pytorch/pytorch:2.5.0-cuda12.4-cudnn9-runtime
+
+%labels
+    Author test75
+    Description Unified crystal+glass SiO2 CG force field (fixed-sigma denoising, N=1000)
+
+%post
+    python -m pip install --no-cache-dir "numpy==1.26.4"
+
+%environment
+    export PYTHONUNBUFFERED=1
+    export PYTHONNOUSERSITE=1
+
+%runscript
+    exec python "$@"
+
+%test
+    python -c "import torch, numpy; print('torch:', torch.__version__); print('CUDA build:', torch.version.cuda); print('CUDA available:', torch.cuda.is_available())"

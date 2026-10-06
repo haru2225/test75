@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# Submit from this repository directory:
+#   qsub -P <ProjectGroup_ID> run_test75.pbs
+#
+# Build the image first (from this directory):
+#   singularity build --force --fakeroot test75-pytorch-2.5.0-cu124.sif Singularity.test75.def
+#
+# SIF_IMAGE, TEST73_HIDDEN_DIM, TEST73_N_LAYERS, TEST73_BATCH_SIZE,
+# TEST73_N_STEPS may be overridden with qsub -v. Both SingularityCE and
+# Apptainer are supported.
+#PBS -q sg8
+#PBS -N test75_train
+#PBS -l walltime=24:00:00
+#PBS -l select=1:ncpus=8:mpiprocs=1:ompthreads=8:mem=32gb:ngpus=1
+#PBS -j oe
+
+set -euo pipefail
+
+if [[ -z "${PBS_O_WORKDIR:-}" ]]; then
+    echo "ERROR: PBS_O_WORKDIR is unset. Submit this file with qsub." >&2
+    exit 2
+fi
+
+WORK_DIR="$(cd "$PBS_O_WORKDIR" && pwd -P)"
+cd "$WORK_DIR"
+
+SIF_IMAGE="${SIF_IMAGE:-$WORK_DIR/test75-pytorch-2.5.0-cu124.sif}"
+if [[ ! -f "$SIF_IMAGE" ]]; then
+    echo "ERROR: $SIF_IMAGE not found. Build it first (see header comment)." >&2
+    exit 2
+fi
+
+CONTAINER_BIN="singularity"
+command -v singularity >/dev/null 2>&1 || CONTAINER_BIN="apptainer"
+
+# SINGULARITYENV_<NAME> is how Singularity/Apptainer passes a host
+# environment variable through to the container as <NAME> -- the bare
+# "--env VAR1,VAR2" form used previously is invalid syntax (--env expects
+# KEY=VALUE pairs) and caused "error for command 'exec'".
+export SINGULARITYENV_TEST73_DEVICE=cuda
+export SINGULARITYENV_TEST73_HIDDEN_DIM="${TEST73_HIDDEN_DIM:-128}"
+export SINGULARITYENV_TEST73_N_LAYERS="${TEST73_N_LAYERS:-4}"
+export SINGULARITYENV_TEST73_BATCH_SIZE="${TEST73_BATCH_SIZE:-32}"
+export SINGULARITYENV_TEST73_N_STEPS="${TEST73_N_STEPS:-50000}"
+# Apptainer uses the APPTAINERENV_ prefix instead; set both so either
+# container runtime picks it up.
+export APPTAINERENV_TEST73_DEVICE=cuda
+export APPTAINERENV_TEST73_HIDDEN_DIM="${TEST73_HIDDEN_DIM:-128}"
+export APPTAINERENV_TEST73_N_LAYERS="${TEST73_N_LAYERS:-4}"
+export APPTAINERENV_TEST73_BATCH_SIZE="${TEST73_BATCH_SIZE:-32}"
+export APPTAINERENV_TEST73_N_STEPS="${TEST73_N_STEPS:-50000}"
+
+"$CONTAINER_BIN" exec --nv \
+    --bind "$WORK_DIR:$WORK_DIR" \
+    "$SIF_IMAGE" python "$WORK_DIR/train_and_export.py"

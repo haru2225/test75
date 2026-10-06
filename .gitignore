@@ -1,0 +1,5 @@
+distorted_work/
+npt_work/
+output/
+__pycache__/
+*.pyc
