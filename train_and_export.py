@@ -29,14 +29,30 @@ REPO_DIR = Path(__file__).resolve().parent
 # sampling probability). Add a new tuple here once a new condition's
 # trajectory + manifest have been generated under data_<name>/.
 DATASETS = [
-    ("crystal_300K", 300.0, 0.15),
-    ("intermediate_1000K", 1000.0, 0.1),
-    ("intermediate_1500K", 1500.0, 0.1),
-    ("intermediate_2000K", 2000.0, 0.1),
-    ("intermediate_2500K", 2500.0, 0.1),
-    ("melt_3000K", 3000.0, 0.15),
-    ("glass_300K", 300.0, 0.15),
-    ("stishovite_300K", 300.0, 0.15),
+    ("crystal_300K", 300.0, 0.10),
+    ("intermediate_1000K", 1000.0, 0.07),
+    ("intermediate_1500K", 1500.0, 0.07),
+    ("intermediate_2000K", 2000.0, 0.07),
+    ("intermediate_2500K", 2500.0, 0.07),
+    ("melt_3000K", 3000.0, 0.10),
+    ("glass_300K", 300.0, 0.10),
+    ("stishovite_300K", 300.0, 0.08),
+    # Distorted structures (all relaxed at 300K) -- Erhard et al.-style
+    # off-equilibrium coverage, new in test75.
+    ("distorted_stretch_p10", 300.0, 0.06),
+    ("distorted_compress_m10", 300.0, 0.06),
+    ("distorted_shear_aniso", 300.0, 0.06),
+    ("distorted_rattle_only", 300.0, 0.06),
+    # NPT pressure-varied structures (all at 300K, varying P -- note: P is
+    # NOT part of the conditioning input yet, only T; these are included
+    # as additional 300K structural diversity for now. Also note the
+    # frame-fixed-cell caveat documented in README.md).
+    ("npt_cristobalite_0GPa", 300.0, 0.03),
+    ("npt_cristobalite_10GPa", 300.0, 0.03),
+    ("npt_cristobalite_20GPa", 300.0, 0.03),
+    ("npt_stishovite_0GPa", 300.0, 0.03),
+    ("npt_stishovite_20GPa", 300.0, 0.03),
+    ("npt_stishovite_40GPa", 300.0, 0.03),
 ]
 
 T_NORM_SCALE = 1000.0  # K
@@ -47,8 +63,12 @@ OUT_DIR = REPO_DIR / "output"
 SIGMA_ANGSTROM = 0.15
 CUTOFF_ANGSTROM = 5.5  # smallest cell here is the 192-atom crystal/melt/glass
 # box (~13.57 A); must stay comfortably under half that.
-HIDDEN_DIM = int(os.environ.get("TEST73_HIDDEN_DIM", 64))
-N_LAYERS = int(os.environ.get("TEST73_N_LAYERS", 3))
+HIDDEN_DIM = int(os.environ.get("TEST73_HIDDEN_DIM", 128))  # bigger than
+# test74's 64 -- test74's melt-quench experiment showed the small network's
+# residual error (train loss plateaued ~0.01-0.015, never near zero) is the
+# likely bottleneck for quench accuracy, not T-coverage (adding
+# intermediate-T data alone did not fix the over-disordering).
+N_LAYERS = int(os.environ.get("TEST73_N_LAYERS", 4))
 BATCH_SIZE = int(os.environ.get("TEST73_BATCH_SIZE", 16))
 N_STEPS = int(os.environ.get("TEST73_N_STEPS", 15000))
 LEARNING_RATE = 3e-4
